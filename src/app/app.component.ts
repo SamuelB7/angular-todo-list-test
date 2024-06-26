@@ -43,6 +43,10 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     remove(index: number) {
+        if (this.todos[index].done) {
+            this.counterTodosDone--;
+        }
+
         this.todos.splice(index, 1);
 
         this.animate()
