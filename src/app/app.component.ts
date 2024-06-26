@@ -32,21 +32,31 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     addTodo(input: HTMLInputElement) {
-        console.log('addTodo: ', input.value);
         const text = input.value;
 
         if (!text) return;
+
+        this.todos.push({ text, done: false });
 
         input.value = '';
         setTimeout(() => this.items.forEach(x => x.animateGo()))
     }
 
     remove(index: number) {
+        this.todos.splice(index, 1);
+
         this.animate()
     }
 
     onToggleDone(index: number, todo: Todo) {
         todo.done = !todo.done;
+        if (todo.done) {
+            this.counterTodosDone++;
+        } else {
+            this.counterTodosDone--;
+        }
+
+        this.todos[index] = todo;
     }
 
     onDragStart(event: DragEvent, fromIndex: number) {
@@ -55,6 +65,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
     onDrop(event: DragEvent, toIndex: number) {
         const fromIndex = event.dataTransfer.getData('text');
+
+        let temp = this.todos[toIndex];
+        this.todos[toIndex] = this.todos[parseInt(fromIndex)];
+        this.todos[parseInt(fromIndex)] = temp;
+
         this.animate();
     }
 
